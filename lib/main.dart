@@ -1,44 +1,76 @@
-import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+import 'pages/learn.dart';
+import 'pages/review.dart';
+
+import './messages/generated.dart';
+
+void main() async {
+  await initializeRust();
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => MyAppState(),
-      child: MaterialApp(
-        title: 'Namer App',
-        theme: ThemeData(
-          useMaterial3: true,
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
-        ),
-        home: MyHomePage(),
+    return MaterialApp(
+      title: 'Word App',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
       ),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => HomePage(),
+        '/learn': (context) => LearnPage(),
+        '/review': (context) => ReviewPage(),
+      },
     );
   }
 }
 
-class MyAppState extends ChangeNotifier {
-  var current = WordPair.random();
-}
-
-class MyHomePage extends StatelessWidget {
+class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var appState = context.watch<MyAppState>();
-
     return Scaffold(
-      body: Column(
-        children: [
-          Text('A random idea:'),
-          Text(appState.current.asLowerCase),
+      appBar: AppBar(
+        title: Text('Word App'),
+      ),
+      body: Center(
+        child: Text(
+          'Welcome to the Word App',
+          style: TextStyle(fontSize: 24),
+        ),
+      ),
+      bottomNavigationBar: DownBar(),
+    );
+  }
+}
+
+class DownBar extends StatelessWidget {
+  const DownBar({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pushNamed(context, '/learn');
+            },
+            child: Text('Learn Words'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pushNamed(context, '/review');
+            },
+            child: Text('Review Words'),
+          ),
         ],
       ),
     );
